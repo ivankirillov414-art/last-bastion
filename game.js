@@ -18,13 +18,13 @@ window.addEventListener('resize',resize);resize();
 function proj(x,y,z=0){return[ox+(x-y*.34)*scale,oy+(y*.78-z)*scale]}
 function poly(points,color){ctx.fillStyle=color;ctx.beginPath();points.forEach((p,i)=>{let q=proj(...p);i?ctx.lineTo(...q):ctx.moveTo(...q)});ctx.closePath();ctx.fill()}
 function line(points,color,width){ctx.strokeStyle=color;ctx.lineWidth=width*scale;ctx.lineCap='round';ctx.lineJoin='round';ctx.beginPath();points.forEach((p,i)=>{let q=proj(...p);i?ctx.lineTo(...q):ctx.moveTo(...q)});ctx.stroke()}
-function box(x,y,w,d,h,c){poly([[x,y,0],[x+w,y,0],[x+w,y,h],[x,y,h]],c[1]);poly([[x+w,y,0],[x+w,y+d,0],[x+w,y+d,h],[x+w,y,h]],c[2]);poly([[x,y,h],[x+w,y,h],[x+w,y+d,h],[x,y+d,h]],c[0])}
+function box(x,y,w,d,h,c,base=0){poly([[x,y+d,base],[x+w,y+d,base],[x+w,y+d,h],[x,y+d,h]],c[1]);poly([[x+w,y,base],[x+w,y+d,base],[x+w,y+d,h],[x+w,y,h]],c[2]);poly([[x,y,h],[x+w,y,h],[x+w,y+d,h],[x,y+d,h]],c[0])}
 function tree(x,y){box(x-3,y-3,6,6,20,['#755841','#543f30','#493327']);for(let i=0;i<3;i++){let z=20+i*12,r=24-i*5;poly([[x-r,y,z],[x+r,y,z],[x,y-10,z+34]],['#216647','#26794c','#348752'][i]);poly([[x+r,y,z],[x,y+14,z],[x,y-10,z+34]],'#174f3e')}}
 // All architecture is shaded world-space geometry: no external textures or downloads.
 function masonry(x,y,w,d,h){
  box(x,y,w,d,h,['#e4d4af','#c4b998','#938b76']);
- for(let z=8;z<h;z+=10){line([[x,y-.2,z],[x+w,y-.2,z]],'#9b927b',.7);line([[x+w+.2,y,z],[x+w+.2,y+d,z]],'#766f60',.7);
- for(let a=6+(Math.floor(z/10)%2)*9;a<w;a+=18)line([[x+a,y-.3,z-8],[x+a,y-.3,z]],'#aaa086',.6);
+ for(let z=8;z<h;z+=10){line([[x,y+d+.2,z],[x+w,y+d+.2,z]],'#9b927b',.7);line([[x+w+.2,y,z],[x+w+.2,y+d,z]],'#766f60',.7);
+ for(let a=6+(Math.floor(z/10)%2)*9;a<w;a+=18)line([[x+a,y+d+.3,z-8],[x+a,y+d+.3,z]],'#aaa086',.6);
  for(let a=7;a<d;a+=15)line([[x+w+.3,y+a,z-8],[x+w+.3,y+a,z]],'#807867',.6)}
  box(x-2,y-2,w+4,d+4,5,['#eee1c1','#b5aa90','#827b69']);
 }
@@ -37,8 +37,8 @@ function roof(x,y,w,d,z){let ridge=x+w/2,top=z+w*.42;
 }
 function windowSlit(x,y,z){poly([[x,y,z],[x+5,y,z],[x+5,y,z+11],[x,y,z+11]],'#344642');line([[x-1,y,z+12],[x+6,y,z+12]],'#efe0ba',2)}
 function tower(x,y){masonry(x,y,23,29,73);poly([[x-3,y-3,77],[x+26,y-3,77],[x+26,y+32,77],[x-3,y+32,77]],'#ded4b6');poly([[x-3,y-3,73],[x+26,y-3,73],[x+26,y-3,77],[x-3,y-3,77]],'#b8ad90');
- for(let a=0;a<23;a+=9){box(x+a,y-3,6,7,87,['#eee1bc','#c5bb9e','#928872']);box(x+a,y+25,6,7,87,['#eee1bc','#c5bb9e','#928872'])}
- windowSlit(x+9,y-.5,44);windowSlit(x+9,y-.5,21);
+ for(let a=0;a<23;a+=9){box(x+a,y-3,6,7,87,['#eee1bc','#c5bb9e','#928872'],77);box(x+a,y+25,6,7,87,['#eee1bc','#c5bb9e','#928872'],77)}
+ windowSlit(x+9,y+29.5,44);windowSlit(x+9,y+29.5,21);
 }
 function building(x,y,kind){
  poly([[x-12,y-12],[x+86,y-12],[x+95,y+67],[x-9,y+67]],'#244f3d');
@@ -47,23 +47,23 @@ function building(x,y,kind){
  masonry(x+7,y+20,50,25,35);roof(x+7,y+20,50,25,36);
  tower(x-17,y+26);tower(x+61,y+26);
  // Iron-bound gate and stone lintel.
- box(x+21,y+19,22,3,29,['#7c6343','#513b2b','#352b24']);
- for(let a=24;a<42;a+=5)line([[x+a,y+18.5,2],[x+a,y+18.5,27]],'#98734d',1);
- line([[x+22,y+18,10],[x+43,y+18,10]],'#293c37',3);line([[x+22,y+18,22],[x+43,y+18,22]],'#293c37',3);
- windowSlit(x+10,y-.3,31);windowSlit(x+49,y-.3,31);
+ box(x+21,y+46,22,3,29,['#7c6343','#513b2b','#352b24']);
+ for(let a=24;a<42;a+=5)line([[x+a,y+49.5,2],[x+a,y+49.5,27]],'#98734d',1);
+ line([[x+22,y+50,10],[x+43,y+50,10]],'#293c37',3);line([[x+22,y+50,22],[x+43,y+50,22]],'#293c37',3);
+ windowSlit(x+10,y+49.3,31);windowSlit(x+49,y+49.3,31);
  line([[x+72,y+40,87],[x+72,y+40,119]],'#614a32',2);
  poly([[x+72,y+40,119],[x+96,y+40,114+Math.sin(time*3)*2],[x+93,y+40,101],[x+72,y+40,104]],'#418df4');
  }else{
  masonry(x,y,54,38,28);roof(x,y,54,38,30);
  box(x-2,y-1,4,3,31,['#bd9762','#775737','#503d2c']);box(x+52,y-1,4,3,31,['#bd9762','#775737','#503d2c']);
- box(x+20,y-2,15,3,21,['#98734c','#5d412d','#3d3025']);
- for(let a=22;a<35;a+=4)line([[x+a,y-2.5,2],[x+a,y-2.5,21]],'#b08351',.8);
- windowSlit(x+8,y-1,10);windowSlit(x+43,y-1,10);
+ box(x+20,y+36,15,3,21,['#98734c','#5d412d','#3d3025']);
+ for(let a=22;a<35;a+=4)line([[x+a,y+39.5,2],[x+a,y+39.5,21]],'#b08351',.8);
+ windowSlit(x+8,y+38.5,10);windowSlit(x+43,y+38.5,10);
  box(x+40,y+24,9,10,61,['#b6a387','#887661','#615747']);
  // Blue awning, timber posts, supply crates.
- poly([[x+6,y-19,18],[x+48,y-19,18],[x+48,y-3,27],[x+6,y-3,27]],'#397da8');
- for(let a=8;a<48;a+=10)line([[x+a,y-19,18],[x+a,y-3,27]],'#78aed0',3);
- box(x+5,y-19,2,2,18,['#b58d58','#765333','#523d2b']);box(x+47,y-19,2,2,18,['#b58d58','#765333','#523d2b']);
+ poly([[x+6,y+54,18],[x+48,y+54,18],[x+48,y+38,27],[x+6,y+38,27]],'#397da8');
+ for(let a=8;a<48;a+=10)line([[x+a,y+54,18],[x+a,y+38,27]],'#78aed0',3);
+ box(x+5,y+54,2,2,18,['#b58d58','#765333','#523d2b']);box(x+47,y+54,2,2,18,['#b58d58','#765333','#523d2b']);
  crate(x+58,y+13);crate(x+60,y+28);
  }
 }
