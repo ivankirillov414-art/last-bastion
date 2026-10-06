@@ -1,5 +1,5 @@
-import {View} from './view.js?v=30.5';
-import {Battle,makeLevel,loadProgress,migrateLegacyBattle,HOME_SITES,TYPES,BRANCHES,homeCost,spend,updateHome,awardVictory,clamp,dist,VERSION} from './core.js?v=30.5';
+import {View} from './view.js?v=31';
+import {Battle,makeLevel,loadProgress,migrateLegacyBattle,HOME_SITES,TYPES,BRANCHES,homeCost,spend,updateHome,awardVictory,clamp,dist,VERSION} from './core.js?v=31';
 const $=id=>document.getElementById(id);let storage;try{localStorage.getItem('bastion-meta');storage=localStorage}catch{let m=new Map();storage={getItem:k=>m.get(k),setItem:(k,v)=>m.set(k,v),removeItem:k=>m.delete(k)}}
 let {home,meta}=loadProgress(storage),view=new View($('scene')),mode='home',battle=null,userPaused=false,panMode=false,armed=null,trapArmed=null,nearId=null,dismissedPlot=null,toastUntil=0,last=0,saveClock=0,hudClock=0,sound=storage.getItem('bastion-sound')==='1',volume=Number(storage.getItem('bastion-volume')||.45),audio,lastSound=0,dialogFocus=null,low=storage.getItem('bastion-3d-low')==='1';let saved;try{saved=Battle.restore(JSON.parse(storage.getItem('bastion-3d-battle')||'null'),meta)}catch{}let legacy;try{legacy=migrateLegacyBattle(JSON.parse(storage.getItem('bastion-v3')||'null'))}catch{}
 view.quality(low);
@@ -39,4 +39,4 @@ view.setWorld('home',home);labelsCreate();hud();$('loading').classList.add('hidd
 // Read-only diagnostics for support; no player actions or credentials are exposed.
 window.bastionDiagnostics=()=>({version:VERSION,mode,webgl:view.renderer.capabilities.isWebGL2,drawCalls:view.renderer.info.render.calls,triangles:view.renderer.info.render.triangles,units:mode==='battle'?battle.enemies.length+battle.allies.length+1:1,level:mode==='battle'?battle.level.index:null,saveSchema:5});
 
-if('serviceWorker' in navigator)navigator.serviceWorker.register('../sw.js?v=30').catch(()=>{});
+if('serviceWorker' in navigator)navigator.serviceWorker.register('../sw.js?v=31').catch(()=>{});
